@@ -21,8 +21,12 @@ class _LoadingState extends State<Loading> {
           children: [
             ElevatedButton(
               onPressed: () async {
-                Position newPosition = await _determinePosition();
-                setState(() => currentPosition = newPosition.toString());
+                try {
+                  Position newPosition = await _determinePosition();
+                  setState(() => currentPosition = newPosition.toString());
+                } catch (e) {
+                  setState(() => currentPosition = e.toString());
+                }
               },
               style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(color: Colors.white),
@@ -59,7 +63,7 @@ class _LoadingState extends State<Loading> {
 
     if (permission == LocationPermission.deniedForever) {
       return Future.error(
-        'Location permissions are permanently denied, '
+        'Location permissions are permanently denied,\n'
         'we cannot request permissions.'
       );
     }
