@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/screens/loading.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,20 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Weather',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const MyHome(),
-    );
-  }
-}
-
-class MyHome extends StatelessWidget {
-  const MyHome({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Weather'),
-      ),
+      home: const Loading(),
     );
   }
 }
