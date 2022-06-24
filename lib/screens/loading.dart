@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
+
+import 'package:weather_app/data/my_location.dart';
+import 'package:weather_app/data/network.dart';
 
 class Loading extends StatefulWidget {
   const Loading({Key? key}) : super(key: key);
@@ -30,14 +29,7 @@ class _LoadingState extends State<Loading> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () async {
-                try {
-                  Position newPosition = await _determinePosition();
-                  setState(() => currentPosition = newPosition.toString());
-                } catch (e) {
-                  setState(() => currentPosition = e.toString());
-                }
-              },
+              onPressed: () => setPositionLabel(),
               style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(color: Colors.white),
               ),
@@ -56,60 +48,29 @@ class _LoadingState extends State<Loading> {
     );
   }
 
-  void resetScreenInfo() {
-    setState(() {
-      currentPosition = 'Where is my location?';
-      currentWeather = "How's the weather?";
-    });
-  }
+  void setPositionLabel() async {
+    MyLocation myLocation = MyLocation();
+    await myLocation.getCurrentPosition();
 
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+    String result = myLocation.longitude != null && myLocation.longitude != null
+      ? 'Latitude: ${myLocation.latitude}, Longitude: ${myLocation.longitude}'
+      : myLocation.errorMessage;
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-        'Location permissions are permanently denied,\n'
-        'we cannot request permissions.'
-      );
-    }
-
-    return await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high
-    );
+    setState(() => currentPosition = result);
   }
 
   void fetchData() async {
-    var url = Uri.parse('https://samples.openweathermap.org/data/2.5/'
-      'weather?q=London&appid=b1b15e88fa797225412429c1c50c122a1');
-    http.Response response = await http.get(url);
+    Network net = Network('https://samples.openweathermap.org/data/2.5/'
+        'weather?q=London&appid=b1b15e88fa797225412429c1c50c122a1');
+    var parsingData = await net.getJSONData();
 
-    final String resultData;
+    if (parsingData != null) {
+      var description = parsingData['weather'][0]['description'];
+      var wind = parsingData['wind']['speed'];
+      var id = parsingData['id'].toString();
 
-    if (response.statusCode == 200) {
-      String jsonData = response.body;
-      var description = jsonDecode(jsonData)['weather'][0]['description'];
-      var wind = jsonDecode(jsonData)['wind']['speed'];
-      var id = jsonDecode(jsonData)['id'].toString();
-
-      resultData = 'description: $description\nwind speed: $wind\nid : $id';
-    } else {
-      resultData = 'Cannot collect weather info!';
+      String result = 'description: $description\nwind speed: $wind\nid : $id';
+      setState(() => currentWeather = result);
     }
-
-    setState(() => currentWeather = resultData);
   }
 }
