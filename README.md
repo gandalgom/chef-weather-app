@@ -16,11 +16,12 @@
 
 * macOS 12.4 Monterey
 * Android Studio Chipmunk (2021.2.1, patch 1)
-* Flutter 3.0.2
+* Flutter 3.0.3
 
 ### 사용 라이브러리 (2022.06 기준)
 
 * Geolocator 8.2.1 [링크](https://pub.dev/packages/geolocator)
+* http: ^0.13.4
 
 ### Git 이용시 장점
 
@@ -32,4 +33,5 @@ git을 이용하여 코드를 내려받을 경우, 주요 업데이트 시점으
 ### Geolocator 사용시 Tip
 
 * 안드로이드 최신 버전에서는 위치 획득 전에 명시적으로 권한 획득 여부를 물어봐야 함. [공식 사이트 예제](https://pub.dev/packages/geolocator#example)대로 할 것
-* 안드로이드 에뮬레이터에서 현재 위치를 잡기 힘들 경우 내장된 구글 지도 앱을 실행해 주면 쉽게 잡을 수 있음.
+* 현재 내 위치의 정확한 좌표가 필요한 경우 웹 브라우저에서 구글 지도 실행 후 위치를 찾으면 주소의 get parameter 중 포함되어 있음
+* 안드로이드 에뮬레이터에서 위치가 리셋되는 경우 내장된 구글 지도 앱을 실행해 주면 다시 잡아 줌
