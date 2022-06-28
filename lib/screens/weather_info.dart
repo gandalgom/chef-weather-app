@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:timer_builder/timer_builder.dart';
+
+import 'package:weather_app/model/weather_model.dart';
 
 class WeatherInfo extends StatefulWidget {
   const WeatherInfo({Key? key, this.parseWeatherData}) : super(key: key);
@@ -18,6 +19,10 @@ class _WeatherInfoState extends State<WeatherInfo> {
   late String cityName;
   late int temperature;
   var date = DateTime.now();
+
+  WeatherModel weatherModel = WeatherModel();
+  late Widget weatherIcon;
+  late String description;
 
   @override
   void initState() {
@@ -60,7 +65,7 @@ class _WeatherInfoState extends State<WeatherInfo> {
                     children: [
                       const SizedBox(height: 150.0),
                       Text(
-                        'Seoul',
+                        cityName,
                         style: GoogleFonts.lato(
                           fontSize: 35.0,
                           fontWeight: FontWeight.bold,
@@ -103,7 +108,7 @@ class _WeatherInfoState extends State<WeatherInfo> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '18℃',
+                        '$temperature\u2103',
                         style: GoogleFonts.lato(
                           fontSize: 85.0,
                           fontWeight: FontWeight.w300,
@@ -112,10 +117,10 @@ class _WeatherInfoState extends State<WeatherInfo> {
                       ),
                       Row(
                         children: [
-                          SvgPicture.asset('images/svg/climacon-sun.svg'),
+                          weatherIcon,
                           const SizedBox(width: 10.0),
                           Text(
-                            'clear sky',
+                            description,
                             style: GoogleFonts.lato(
                               fontSize: 16.0,
                               color: Colors.white,
@@ -233,8 +238,11 @@ class _WeatherInfoState extends State<WeatherInfo> {
   void updateData(dynamic weatherData) {
     cityName = weatherData['name'];
 
-    double rawTemperature = weatherData['main']['temp'];
+    double rawTemperature = weatherData['main']['temp'].toDouble();
     temperature = rawTemperature.round();
+
+    weatherIcon = weatherModel.getWeatherIcon(weatherData['weather'][0]['id']);
+    description = weatherData['weather'][0]['description'];
   }
 
   String getSystemTime() {
