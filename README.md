@@ -26,6 +26,7 @@
 * [flutter_svg](https://pub.dev/packages/flutter_svg) 1.1.0
 * [timer_builder](https://pub.dev/packages/timer_builder) 2.0.0: Null Safety 바로 적용
 * [intl](https://pub.dev/packages/intl) 0.17.0: Null Safety 바로 적용
+* [flutter_spinkit](https://pub.dev/packages/flutter_spinkit) 5.1.0: Null Safety 바로 적용
 
 ### Git 이용시 장점
 

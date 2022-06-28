@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:weather_app/data/my_location.dart';
 import 'package:weather_app/data/network.dart';
@@ -13,9 +14,6 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
 
-  String currentPosition = 'Where is my location?';
-  String currentWeather = "How's the weather?";
-
   MyLocation myLocation = MyLocation();
 
   // TODO: Input your API key
@@ -29,41 +27,12 @@ class _LoadingState extends State<Loading> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () => setPositionLabel(),
-                style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(color: Colors.white),
-                ),
-                child: const Text('Get my location'),
-              ),
-              const SizedBox(height: 40.0),
-              Text(
-                currentPosition,
-                style: const TextStyle(fontSize: 16.0),
-              ),
-              const SizedBox(height: 40.0),
-              Text(currentWeather),
-            ],
-          ),
-        ),
+    return const Scaffold(
+      backgroundColor: Colors.amber,
+      body: Center(
+        child: SpinKitDoubleBounce(color: Colors.white, size: 80.0),
       ),
     );
-  }
-
-  void setPositionLabel() async {
-    await myLocation.getCurrentPosition();
-
-    String result = myLocation.latitude != null && myLocation.longitude != null
-      ? 'Latitude: ${myLocation.latitude}, Longitude: ${myLocation.longitude}'
-      : myLocation.errorMessage;
-
-    setState(() => currentPosition = result);
   }
 
   void fetchData() async {
@@ -92,16 +61,26 @@ class _LoadingState extends State<Loading> {
               )
             );
           } else {
-            setState(() => currentWeather = "Weather info page hasn't mounted");
+            showErrorMessage("Weather info page hasn't mounted");
           }
         } else {
-          setState(() => currentWeather = "Can't receive weather data");
+          showErrorMessage("Can't receive weather data");
         }
       } else {
-        setState(() => currentWeather = "Can't check my location");
+        showErrorMessage("Can't check my location");
       }
     } on Exception catch (e) {
-      setState(() => currentWeather = e.toString());
+      showErrorMessage(e.toString());
     }
+  }
+
+  void showErrorMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.redAccent,
+        duration: const Duration(seconds: 1),
+      )
+    );
   }
 }
