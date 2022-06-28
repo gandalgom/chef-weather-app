@@ -22,8 +22,10 @@
 
 * [geolocator](https://pub.dev/packages/geolocator) 8.2.1
 * [http](https://pub.dev/packages/http) 0.13.4
-* [google_font](https://pub.dev/packages/google_font) 3.0.1: Null Safety를 바로 적용하여 최신 버전을 사용함
+* [google_font](https://pub.dev/packages/google_font) 3.0.1: Null Safety 바로 적용
 * [flutter_svg](https://pub.dev/packages/flutter_svg) 1.1.0
+* [timer_builder](https://pub.dev/packages/timer_builder) 2.0.0: Null Safety 바로 적용
+* [intl](https://pub.dev/packages/intl) 0.17.0: Null Safety 바로 적용
 
 ### Git 이용시 장점
 
