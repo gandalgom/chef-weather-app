@@ -70,16 +70,25 @@ class _LoadingState extends State<Loading> {
     try {
       await myLocation.getCurrentPosition();
       if (myLocation.latitude != null && myLocation.longitude != null) {
-        Network net = Network('https://api.openweathermap.org/data/2.5/weather'
+        Network net = Network(
+          'https://api.openweathermap.org/data/2.5/weather'
             '?lat=${myLocation.latitude}&lon=${myLocation.longitude}'
-            '&appid=$_apiKey&units=metric');
-        var weatherData = await net.getJSONData();
+            '&appid=$_apiKey&units=metric',
+          'https://api.openweathermap.org/data/2.5/air_pollution'
+            '?lat=${myLocation.latitude}&lon=${myLocation.longitude}'
+            '&appid=$_apiKey&units=metric'
+        );
+        var weatherData = await net.getWeatherData();
+        var airPollutionData = await net.getAirData();
 
-        if (weatherData != null) {
+        if (weatherData != null && airPollutionData != null) {
           if (mounted) {
             Navigator.push(context,
               MaterialPageRoute(
-                builder: (context) => WeatherInfo(parseWeatherData: weatherData)
+                builder: (context) => WeatherInfo(
+                  parseWeatherData: weatherData,
+                  parseAirData: airPollutionData,
+                )
               )
             );
           } else {

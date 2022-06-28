@@ -6,9 +6,14 @@ import 'package:timer_builder/timer_builder.dart';
 import 'package:weather_app/model/weather_model.dart';
 
 class WeatherInfo extends StatefulWidget {
-  const WeatherInfo({Key? key, this.parseWeatherData}) : super(key: key);
+  const WeatherInfo({
+    Key? key,
+    this.parseWeatherData,
+    this.parseAirData
+  }) : super(key: key);
 
   final dynamic parseWeatherData;
+  final dynamic parseAirData;
 
   @override
   State<WeatherInfo> createState() => _WeatherInfoState();
@@ -24,10 +29,16 @@ class _WeatherInfoState extends State<WeatherInfo> {
   late Widget weatherIcon;
   late String description;
 
+  late Widget airIcon;
+  late Widget airStatus;
+
+  late double fineDust;
+  late double ultraFineDust;
+
   @override
   void initState() {
     super.initState();
-    updateData(widget.parseWeatherData);
+    updateData(widget.parseWeatherData, widget.parseAirData);
   }
 
   @override
@@ -153,20 +164,9 @@ class _WeatherInfoState extends State<WeatherInfo> {
                           ),
                         ),
                         const SizedBox(height: 10.0),
-                        Image.asset(
-                          'images/png/bad.png',
-                          width: 37.0,
-                          height: 35.0,
-                        ),
+                        airIcon,
                         const SizedBox(height: 10.0),
-                        Text(
-                          '"매우나쁨"',
-                          style: GoogleFonts.lato(
-                            fontSize: 14.0,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        airStatus,
                       ],
                     ),
                     Column(
@@ -180,7 +180,7 @@ class _WeatherInfoState extends State<WeatherInfo> {
                         ),
                         const SizedBox(height: 10.0),
                         Text(
-                          '174.75',
+                          '$fineDust',
                           style: GoogleFonts.lato(
                             fontSize: 24.0,
                             color: Colors.white,
@@ -208,7 +208,7 @@ class _WeatherInfoState extends State<WeatherInfo> {
                         ),
                         const SizedBox(height: 10.0),
                         Text(
-                          '84.03',
+                          '$ultraFineDust',
                           style: GoogleFonts.lato(
                             fontSize: 24.0,
                             color: Colors.white,
@@ -235,7 +235,7 @@ class _WeatherInfoState extends State<WeatherInfo> {
     );
   }
 
-  void updateData(dynamic weatherData) {
+  void updateData(dynamic weatherData, dynamic airPollutionData) {
     cityName = weatherData['name'];
 
     double rawTemperature = weatherData['main']['temp'].toDouble();
@@ -243,6 +243,13 @@ class _WeatherInfoState extends State<WeatherInfo> {
 
     weatherIcon = weatherModel.getWeatherIcon(weatherData['weather'][0]['id']);
     description = weatherData['weather'][0]['description'];
+
+    int index = airPollutionData['list'][0]['main']['aqi'];
+    airIcon = weatherModel.getAQIIcon(index);
+    airStatus = weatherModel.getAirCondition(index);
+
+    fineDust = airPollutionData['list'][0]['components']['pm10'];
+    ultraFineDust = airPollutionData['list'][0]['components']['pm2_5'];
   }
 
   String getSystemTime() {
