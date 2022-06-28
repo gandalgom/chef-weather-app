@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WeatherInfo extends StatefulWidget {
   const WeatherInfo({Key? key, this.parseWeatherData}) : super(key: key);
@@ -23,22 +24,37 @@ class _WeatherInfoState extends State<WeatherInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                cityName,
-                style: const TextStyle(fontSize: 30.0),
-              ),
-              const SizedBox(height: 20.0),
-              Text(
-                '$temperature℃',
-                style: const TextStyle(fontSize: 30.0),
-              ),
-            ],
+      backgroundColor: const Color(0xffe79e4a),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        leading: IconButton(
+          icon: const Icon(Icons.near_me),
+          onPressed: () {},
+          iconSize: 30.0,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.location_searching),
+            onPressed: () {},
+            iconSize: 30.0,
           ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 150.0),
+            Text(
+              'Seoul',
+              style: GoogleFonts.lato(
+                fontSize: 35.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
       ),
     );
